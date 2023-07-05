@@ -4,13 +4,17 @@ import Models from "../models";
 export default {
   addProduct: async (req, res, next) => {
     try {
-      const { nombre, precio, cantidad } = req.body;
+      const { nombre, precio, cantidad, descripcion,path,filename } = req.body;
 
       const agregarProducto = new Models.Producto({
         nombre,
         precio,
         cantidad,
+        descripcion
       });
+
+      agregarProducto.filename=req.file.filename;
+      agregarProducto.path='public/images/'+req.file.filename;
 
       const agregarP = await agregarProducto.save();
       res.status(200).json(agregarP);

@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import mongoose from "mongoose";
+import multer from "multer";
+import {v4 as uuid} from "uuid";
 //importación de rutas
 import routes from "./routes";
 
@@ -25,6 +27,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
+
+//imagenes
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'public/images')
+    },
+    filename:(req,file,cb)=>{
+        cb(null,uuid()+path.extname(file.originalname))
+    }
+})
+app.use(multer({storage:storage}).single('image'));
 
 //rutas
 app.use('/api',routes);

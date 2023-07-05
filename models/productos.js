@@ -4,6 +4,9 @@ const productos=new Schema({
     nombre:String,
     precio:Number,
     cantidad:Number,
+    descripcion:String,
+    filename:String,
+    path:String,
     createdArt:{type:Date, default:Date.now}
 });
 
