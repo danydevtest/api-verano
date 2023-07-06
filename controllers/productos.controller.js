@@ -4,7 +4,7 @@ import Models from "../models";
 export default {
   addProduct: async (req, res, next) => {
     try {
-      const { nombre, precio, cantidad, descripcion,path,filename } = req.body;
+      const { nombre, precio, cantidad, descripcion } = req.body;
 
       const agregarProducto = new Models.Producto({
         nombre,
