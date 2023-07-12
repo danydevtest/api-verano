@@ -5,8 +5,12 @@ const productos=new Schema({
     precio:Number,
     cantidad:Number,
     descripcion:String,
-    filename:String,
-    path:String,
+    image:{
+        filename:String,
+        path:String
+        },
+    
+    
     createdArt:{type:Date, default:Date.now}
 });
 

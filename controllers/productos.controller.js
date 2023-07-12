@@ -1,5 +1,6 @@
-import models from "../models";
+
 import Models from "../models";
+import fs from "fs-extra";
 
 export default {
   addProduct: async (req, res, next) => {
@@ -13,8 +14,13 @@ export default {
         descripcion
       });
 
-      agregarProducto.filename=req.file.filename;
-      agregarProducto.path='public/images/'+req.file.filename;
+      agregarProducto.image={
+        filename:req.file.filename,
+        path: 'public/images/'+req.file.filename
+      }
+
+      //agregarProducto.filename=req.file.filename;
+      //agregarProducto.path='public/images/'+req.file.filename;
 
       const agregarP = await agregarProducto.save();
       res.status(200).json(agregarP);
@@ -44,7 +50,12 @@ export default {
       const eliminarPro = await Models.Producto.findByIdAndDelete(
         req.params.id
       );
-      res.status(200).json(eliminarPro);
+
+      const delIma=eliminarPro.image.path;
+
+      const fsRemove= await fs.unlink(delIma);
+      res.status(200).json(fsRemove);
+      console.log('Imagen eliminado',);
     } catch (error) {
       res.status(500).send({
         message: "Ocurrio un error al eliminar",
@@ -56,7 +67,16 @@ export default {
   updateProducto: async (req, res, next) => {
     try {
         const updateDatos=req.body;
-        await Models.Producto.findByIdAndUpdate(req.params.id,updateDatos);
+       const updat= await Models.Producto.findByIdAndUpdate(req.params.id,updateDatos);
+       if(req.image.filename){
+        await fs.unlink(req.image.path)
+       }else{
+        updat.image={
+          filename:req.file.filename,
+          path: 'public/images/'+req.file.filename
+        }
+       }
+
         res.json({
             message:"Datos modificados"
         })
